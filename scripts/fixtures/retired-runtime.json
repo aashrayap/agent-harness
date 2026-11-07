@@ -1,0 +1,153 @@
+{
+  "version": 1,
+  "source_revision": "e5adb70cf819eb2955b17968d9b0d9b4c1c668f6",
+  "claude_settings": {
+    "$schema": "https://json.schemastore.org/claude-code-settings.json",
+    "permissions": {
+      "allow": [
+        "mcp__ide__getDiagnostics"
+      ],
+      "defaultMode": "default"
+    },
+    "statusLine": {
+      "type": "command",
+      "command": "~/.claude/statusline-enhanced.sh",
+      "padding": 0
+    },
+    "hooks": {
+      "SessionStart": [
+        {
+          "matcher": "startup|resume",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "cat ~/.dot-agent/claude/caveman-boot.txt",
+              "timeout": 5,
+              "statusMessage": "Loading caveman mode"
+            }
+          ]
+        }
+      ]
+    },
+    "enabledPlugins": {
+      "gopls-lsp@claude-plugins-official": true,
+      "typescript-lsp@claude-plugins-official": true,
+      "codex@openai-codex": true
+    },
+    "alwaysThinkingEnabled": true,
+    "effortLevel": "high",
+    "autoMemoryEnabled": false,
+    "autoDreamEnabled": false,
+    "showThinkingSummaries": true
+  },
+  "skill_entries": {
+    "skills/engineering/arena/SKILL.md": "136f7622def7b7afec3cd085e3809d5c81cbd76d12aac0ab833f91cf48a6e559",
+    "skills/engineering/auto-review/SKILL.md": "ef774d3be73c0d577a0f7b23f26e7077d8f60bfcb94139c030ea61451d8a044e",
+    "skills/engineering/codex-computer-use/SKILL.md": "da7a906068a0aafaa28253e49ece8d4af235e8272e161b578c139cdf0973c5eb",
+    "skills/engineering/grill-me/SKILL.md": "7394b04d1c7ea66bdfab3ac2a5cd78deed7f6df23c02808b45cb847ce8bbd232",
+    "skills/engineering/handoff/SKILL.md": "94bee8c16cbfcf9f1e15187f7e5d0d5a93c4adb7c512feceecaab80c8ff7c059",
+    "skills/engineering/harness-doctor/SKILL.md": "ffd859bdd7f44fb7e434c9b32250f11a2beccc5603f068728ec7a8fa0666742b",
+    "skills/engineering/parallel-plan/SKILL.md": "a49b1212172347c541e1072a34bf7aadfc37418e2939cb4a59ff6d3433811bb4",
+    "skills/engineering/prototype/SKILL.md": "d1a213faed14c966c26af114a0500ce21d81717092a8eb80e22e6ead2c3a72bb",
+    "skills/engineering/research/SKILL.md": "41d4f896f8c38f726e686c89bb1086ca743328734c64b5236623a0d0ef5ba0ff",
+    "skills/engineering/router/SKILL.md": "36e853a8200a4bc6cb7894e8240e012051c4656fc9b6ed293678773baf46a12d",
+    "skills/engineering/tdd/SKILL.md": "11fb3d35fe732c50cef96a0c3047047f0cd67590fc8efa966c043e57626e0c07",
+    "skills/engineering/to-prd/SKILL.md": "d5faf277de12f3a744e1918c4b32764fd483e1f21ef5565ce83310f821f69481",
+    "skills/engineering/verify/SKILL.md": "fb8e1f03f5b8785b27ed9657ac6d7ec0f2053b681ae3bc654d927fc507cb0421",
+    "skills/engineering/wayfinder/SKILL.md": "82815bb1d5b2802bbf17b546164d7a05231210f2d84d53321adefca9d27a110a",
+    "skills/engineering/which-skill/SKILL.md": "20d66c80e94504193999693acb6980768746aa13816f2b73a251ba99ee4282de",
+    "skills/engineering/writing-great-skills/SKILL.md": "19800e2a38e47b2d8ade003c8bd5046fa8c5aeeb9c8864377b140a0cfdfd62d6",
+    "skills/learning/explain/SKILL.md": "eafd7f8a3ce1c44d56dba6292de932f386f6ee1f2d7e2e169dc8017a1dddb026",
+    "skills/learning/teach/SKILL.md": "1301db3d7746df92e0eaa3568c978517ab99074a94918351bda878cbfc900de5",
+    "skills/learning/visual/SKILL.md": "7b54350ce1d7824d072938f7682c3d3025da231ac166acad332d7baffa9dfa5d",
+    "skills/legacy/domain-modeling/SKILL.md": "3ea5c67f46aa12acce716f3d79c78f3e3f3508f8169891298c59ef03c6840f24",
+    "skills/legacy/frontend-design/SKILL.md": "c4aa6738df36201bd44906d251d005b867bb5bc1fdd861d431797c806ed8a84f",
+    "skills/legacy/grill-with-docs/SKILL.md": "1aa767cb4e4fe36fb5ed181e22c1e6763b38239252ba0252af76443ef26a78e6",
+    "skills/legacy/grilling/SKILL.md": "2c2833bd1a13e3b2149a56dcfaba4fbeab9210604136b4ae81a4ba59e0bab069",
+    "skills/legacy/improve-agents-md/SKILL.md": "9d95d7132b25b8dd4546c3aa1150ce98913f4fcc516d0b11cd09f9cb56ba0afb",
+    "skills/legacy/improve-agents-md/claude/SKILL.md": "a4ca6d0377f8f28b58cd52d9dcab6ec78618e76bb75114f87c3661a1eaca81fe",
+    "skills/legacy/improve-agents-md/codex/SKILL.md": "1ad5c90f5648dda5d871c0a74449880902bf251faede47a25fd4ab2eba8656ae",
+    "skills/legacy/zoom-out/SKILL.md": "99a588bdc1325b3281d99e317a57882b432a38f21459123fcc4c64c9a6c7d0b4",
+    "skills/style/bullet-style/SKILL.md": "ccda655a9d1a54564852b3f0983879e501250af291f640d29adf2b48d731d25c",
+    "skills/style/caveman/SKILL.md": "f656993c139be36448bf8ddcd50cb3ac022b71b3ae28322a6f2cc23224fea78d",
+    "skills/style/recap/SKILL.md": "ce751a07a97b80a08635416180b018b184d4db4c0820859bef4301e3c068f655",
+    "skills/style/unslop/SKILL.md": "c27fd5ff5a47db1aec8b990dd994b0f5bef8a59fc2c718fea2a069cfac70e099"
+  },
+  "retired_payloads": {
+    "handoff": [
+      {
+        "SKILL.md": "94bee8c16cbfcf9f1e15187f7e5d0d5a93c4adb7c512feceecaab80c8ff7c059",
+        "agents/": "directory",
+        "agents/openai.yaml": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94"
+      }
+    ],
+    "domain-modeling": [
+      {
+        "SKILL.md": "3ea5c67f46aa12acce716f3d79c78f3e3f3508f8169891298c59ef03c6840f24",
+        "references/": "directory",
+        "references/CONTEXT-FORMAT.md": "b8cc318f2a4285b530e908b6bc43901c3c5cd11100362636bbc4216639bef597",
+        "references/ADR-FORMAT.md": "f1f36cd3f8d3b6474ddd5855da4e233bfc4ae1a1c5024909ccf11871819a41b2"
+      }
+    ],
+    "frontend-design": [
+      {
+        "SKILL.md": "c4aa6738df36201bd44906d251d005b867bb5bc1fdd861d431797c806ed8a84f"
+      }
+    ],
+    "grill-with-docs": [
+      {
+        "SKILL.md": "1aa767cb4e4fe36fb5ed181e22c1e6763b38239252ba0252af76443ef26a78e6"
+      }
+    ],
+    "grilling": [
+      {
+        "SKILL.md": "2c2833bd1a13e3b2149a56dcfaba4fbeab9210604136b4ae81a4ba59e0bab069"
+      }
+    ],
+    "improve-agents-md": [
+      {
+        "SKILL.md": "1ad5c90f5648dda5d871c0a74449880902bf251faede47a25fd4ab2eba8656ae",
+        "assets/": "directory",
+        "assets/AGENTS.template.md": "5ab6970f4fe97885348e0a88debc11679b8cdf060d4b59c28f13c806f2cf664e",
+        "assets/CLAUDE.template.md": "c166e59504b52b1c41e39cd1adcb3f925b36b6d8135bfa892b6875b7a5ac5a40",
+        "references/": "directory",
+        "references/progressive-disclosure.md": "7b7c35fa58c48aae9304f2e9083df16651f10a199ce71e86396342189e20a5af"
+      }
+    ],
+    "zoom-out": [
+      {
+        "SKILL.md": "99a588bdc1325b3281d99e317a57882b432a38f21459123fcc4c64c9a6c7d0b4"
+      }
+    ],
+    "router": [
+      {
+        "SKILL.md": "95ee7b0398558afa5cb4999a871e16b4446c90d0b4f4d667d9209ca94107f27e",
+        "agents/": "directory",
+        "agents/openai.yaml": "7ac16421b5f6bb7f99278dc4d99dad794a32525470a359325a91215fb7da4369"
+      }
+    ],
+    "codex-computer-use": [
+      {
+        "SKILL.md": "fa82064e4d0c49b9fadfc29f0e1fb2df028b52d349a11932f82faea05804bd1b",
+        "agents/": "directory",
+        "agents/openai.yaml": "8619a54e8c098122a7f3881394f84ca89b684366e848233a29ad18b6ec363935"
+      }
+    ]
+  },
+  "retired_files": {
+    ".codex/speak.config.toml": "b917ca9605c9853f794f80dfca6a3447dfe4b1fe7fe589f61237e51bf7a8bc3a"
+  },
+  "retired_launchagents": {
+    "me.dot-agent.daily-driver": "skills/personal/daily-driver",
+    "me.dot-agent.atlas-memory-map": "skills/personal/atlas"
+  },
+  "codex_keymap": {
+    "global": {
+      "open_transcript": "ctrl-o",
+      "open_external_editor": "ctrl-g"
+    },
+    "editor": {
+      "insert_newline": "ctrl-j"
+    }
+  }
+}

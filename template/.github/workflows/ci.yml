@@ -1,0 +1,22 @@
+name: ci
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Checks and tests
+        env:
+          BASE_REF: origin/${{ github.base_ref || 'main' }}
+        run: scripts/check --tests

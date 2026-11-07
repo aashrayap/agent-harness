@@ -1,0 +1,100 @@
+<h2 class="sr-only">SUMMARY</h2>
+<style>
+#m .node rect,#m .node polygon,#m .node circle,#m .node ellipse,#m .node path{fill:var(--surface-1,#f1efe8)!important;stroke:var(--border-strong,#888780)!important}
+#m .cluster rect{fill:var(--surface-0,#faf9f5)!important;stroke:var(--border,#b4b2a9)!important}
+#m .nodeLabel,#m .nodeLabel *,#m .cluster-label,#m .cluster-label *,#m .edgeLabel,#m .edgeLabel *,#m text{color:var(--text-primary,#2c2c2a)!important;fill:var(--text-primary,#2c2c2a)!important}
+#m .edgeLabel,#m .edgeLabel p,#m .labelBkg,#m .edgeLabel rect{background:var(--surface-2,#fff)!important;fill:var(--surface-2,#fff)!important}
+#m .flowchart-link,#m .edgePath path,#m .relation{stroke:var(--text-secondary,#5f5e5a)!important}
+#m marker path{fill:var(--text-secondary,#5f5e5a)!important;stroke:var(--text-secondary,#5f5e5a)!important}
+#m .done rect,#m .done polygon{fill:var(--bg-success,#eaf3de)!important;stroke:var(--border-success,#3b6d11)!important}
+#m .done .nodeLabel,#m .done .nodeLabel *{color:var(--text-success,#27500a)!important}
+#m .todo rect,#m .todo polygon{fill:var(--bg-warning,#faeeda)!important;stroke:var(--border-warning,#854f0b)!important}
+#m .todo .nodeLabel,#m .todo .nodeLabel *{color:var(--text-warning,#633806)!important}
+#m .problem rect,#m .problem polygon{fill:var(--bg-danger,#fcebeb)!important;stroke:var(--border-danger,#a32d2d)!important}
+#m .problem .nodeLabel,#m .problem .nodeLabel *{color:var(--text-danger,#791f1f)!important}
+#legend{display:flex;flex-wrap:wrap;gap:4px 16px;margin-top:8px;font:12px "anthropic-sans",sans-serif;color:var(--text-secondary,#5f5e5a)}
+#legend span{display:inline-flex;align-items:center;gap:6px}
+#legend i{width:12px;height:12px;border-radius:3px;border:1px solid}
+#legend .done{background:var(--bg-success,#eaf3de);border-color:var(--border-success,#3b6d11)}
+#legend .todo{background:var(--bg-warning,#faeeda);border-color:var(--border-warning,#854f0b)}
+#legend .problem{background:var(--bg-danger,#fcebeb);border-color:var(--border-danger,#a32d2d)}
+</style>
+<div id="m"></div>
+<div id="legend"></div>
+<script type="module">
+import mermaid from 'https://esm.sh/mermaid@11/dist/mermaid.esm.min.mjs';
+await document.fonts.ready;
+mermaid.initialize({startOnLoad:false,theme:'base',securityLevel:'loose',fontFamily:'"anthropic-sans", sans-serif',themeVariables:{fontSize:'13px',fontFamily:'"anthropic-sans", sans-serif'}});
+const src = `SOURCE`;
+const { svg } = await mermaid.render('m-svg', src);
+const m = document.getElementById('m');
+m.innerHTML = svg;
+const states = { done: 'working today', todo: 'being built / planned', problem: 'broken or blocking' };
+document.getElementById('legend').innerHTML = Object.keys(states).filter(k => m.querySelector('svg .' + k))
+  .map(k => '<span><i class="' + k + '"></i>' + states[k] + '</span>').join('');
+const svgEl = m.querySelector('svg');
+const vb = svgEl.viewBox && svgEl.viewBox.baseVal;
+const W = (vb && vb.width) || svgEl.getBBox().width;
+const H = (vb && vb.height) || svgEl.getBBox().height;
+svgEl.removeAttribute('style');
+svgEl.setAttribute('width', W);
+svgEl.setAttribute('height', H);
+svgEl.style.cssText = 'display:block;max-width:none';
+const stage = document.createElement('div');
+stage.style.cssText = 'transform-origin:0 0;width:' + W + 'px';
+svgEl.replaceWith(stage);
+stage.appendChild(svgEl);
+m.style.cssText = 'position:relative;overflow:hidden;touch-action:none;user-select:none;border-radius:8px';
+let open = false, s = 1, x = 0, y = 0, drag = null;
+const apply = () => {
+  stage.style.transform = 'translate(' + x + 'px,' + y + 'px) scale(' + s + ')';
+  m.style.cursor = !open ? 'zoom-in' : drag && drag.moved ? 'grabbing' : 'grab';
+};
+const fit = () => {
+  const w = m.clientWidth, M = open ? 24 : 0;
+  s = open ? Math.min((w - 2 * M) / W, (760 - 2 * M) / H, 3) : Math.min(w / W, 600 / H, 2);
+  const h = Math.round(H * s + 2 * M);
+  m.style.height = h + 'px';
+  x = (w - W * s) / 2;
+  y = (h - H * s) / 2;
+  apply();
+};
+const toggle = on => {
+  open = on;
+  m.style.background = open ? 'var(--surface-1,#f1efe8)' : 'transparent';
+  m.style.boxShadow = open ? 'inset 0 0 0 0.5px var(--border-strong,#888780)' : 'none';
+  m.style.borderRadius = open ? '12px' : '8px';
+  fit();
+};
+const zoomAt = (f, px, py) => {
+  const n = Math.min(Math.max(s * f, 0.1), 12);
+  x = px - ((px - x) * n) / s;
+  y = py - ((py - y) * n) / s;
+  s = n;
+  apply();
+};
+const at = e => { const r = m.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+m.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, ox: x, oy: y, moved: false }; m.setPointerCapture(e.pointerId); });
+m.addEventListener('pointermove', e => {
+  if (!drag || !open) return;
+  const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  if (!drag.moved && Math.hypot(dx, dy) < 4) return;
+  drag.moved = true;
+  x = drag.ox + dx;
+  y = drag.oy + dy;
+  apply();
+});
+m.addEventListener('pointerup', () => { const d = drag; drag = null; if (!open && d) toggle(true); else apply(); });
+m.addEventListener('wheel', e => {
+  if (!open) return;
+  e.preventDefault();
+  zoomAt(Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.002)), ...at(e));
+}, { passive: false });
+m.addEventListener('dblclick', () => { if (open) fit(); });
+document.addEventListener('pointerdown', e => { if (open && !m.contains(e.target)) toggle(false); });
+addEventListener('blur', () => { if (open) toggle(false); });
+addEventListener('keydown', e => { if (open && e.key === 'Escape') toggle(false); });
+let lastW = m.clientWidth;
+addEventListener('resize', () => { if (m.clientWidth !== lastW) { lastW = m.clientWidth; fit(); } });
+toggle(false);
+</script>

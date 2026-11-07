@@ -1,0 +1,82 @@
+<title>TITLE</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+:root{
+  --bg:#FFFFFF; --ink:#182420; --muted:#5E6E68; --rule:#E3E9E6; --accent:#0E6E5C;
+  --sans:system-ui,-apple-system,"Segoe UI",sans-serif; --mono:ui-monospace,SFMono-Regular,Menlo,monospace;
+  color-scheme:light;
+}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55}
+main{max-width:880px;margin:0 auto;padding-block:40px 72px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:44px}
+h1{font-size:28px;margin:0;text-wrap:balance}
+h2{font-size:17px;margin:0 0 12px;text-wrap:balance}
+.take{margin:8px 0 0;font-size:17px;color:var(--accent)}
+section{min-width:0}
+ul{margin:10px 0 0;padding-left:18px;display:grid;gap:4px}
+.wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--rule);white-space:nowrap}
+th{font-size:13px;color:var(--muted);font-weight:600}
+code{font-family:var(--mono);font-size:13px}
+.note{font-size:13px;color:var(--muted);margin:8px 0 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(360px,100%),1fr));gap:28px}
+.grid>div{min-width:0}
+pre.mermaid{background:var(--bg);margin:0;overflow-x:auto}
+pre.mermaid .node rect,pre.mermaid .node polygon,pre.mermaid .node circle{fill:#FFFFFF!important;stroke:#182420!important}
+pre.mermaid .nodeLabel,pre.mermaid .nodeLabel *,pre.mermaid .cluster-label,pre.mermaid .cluster-label *,pre.mermaid .edgeLabel,pre.mermaid .edgeLabel *{color:#182420!important;fill:#182420!important}
+pre.mermaid .cluster rect{fill:#F6F8F7!important;stroke:#E3E9E6!important}
+pre.mermaid .edgePath path,pre.mermaid .flowchart-link{stroke:#5E6E68!important}
+pre.mermaid .marker,pre.mermaid marker path{fill:#5E6E68!important;stroke:#5E6E68!important}
+pre.mermaid .edgeLabel,pre.mermaid .edgeLabel rect,pre.mermaid .labelBkg{background:#FFFFFF!important;fill:#FFFFFF!important}
+</style>
+<main>
+<header>
+<h1>TITLE</h1>
+<p class="take">One-line takeaway: what the reader should conclude.</p>
+</header>
+
+<section>
+<h2>Where things stand</h2>
+<div class="wrap"><table>
+<tr><th>Item</th><th>State</th></tr>
+<tr><td>example</td><td>measured fact</td></tr>
+</table></div>
+<p class="note">Caveats that change how the table is read.</p>
+</section>
+
+<section>
+<h2>Plain heading that says what the reader learns</h2>
+<p class="take">Section takeaway in one line.</p>
+<pre class="mermaid">
+flowchart LR
+  classDef default fill:#FFFFFF,stroke:#182420,color:#182420
+  subgraph A[Stage]
+    direction TB
+    a1[short label] --> a2[short label]
+  end
+  a2 --> b1[next]
+</pre>
+<div class="wrap"><table>
+<tr><th>Part</th><th>Now</th></tr>
+<tr><td>component</td><td>state in under ten words</td></tr>
+</table></div>
+</section>
+
+<section class="grid">
+<div>
+<h2>Small parallel view</h2>
+<pre class="mermaid">
+flowchart TB
+  classDef default fill:#FFFFFF,stroke:#182420,color:#182420
+  x[input] --> y[output]
+</pre>
+</div>
+</section>
+
+<section>
+<h2>Your next steps</h2>
+<ul>
+<li>One action per bullet.</li>
+</ul>
+</section>
+</main>

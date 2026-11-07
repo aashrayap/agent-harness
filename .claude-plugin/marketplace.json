@@ -1,0 +1,1 @@
+{ "name": "dot-agent", "owner": { "name": "Ash Pyakurel" }, "plugins": [{ "name": "dot-agent", "source": "./", "description": "dot-agent harness skills for Claude Code cloud sessions" }] }

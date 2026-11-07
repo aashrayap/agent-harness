@@ -1,0 +1,87 @@
+name: verify-profiles
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+  push:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Static checks and unit suites
+        env:
+          BASE_REF: origin/${{ github.base_ref || 'main' }}
+        run: scripts/check --tests
+
+  install-claude:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install Claude Code twice into a fresh HOME and verify the profile
+        run: |
+          export HOME="$RUNNER_TEMP/home-claude"
+          mkdir -p "$HOME"
+          cp -R "$GITHUB_WORKSPACE" "$HOME/.dot-agent"
+          cd "$HOME/.dot-agent"
+          ./setup.sh --runtime claude
+          find "$HOME/.claude" -type f -not -path '*/backups/*' -exec shasum {} + | sort > "$RUNNER_TEMP/first"
+          ./setup.sh
+          find "$HOME/.claude" -type f -not -path '*/backups/*' -exec shasum {} + | sort > "$RUNNER_TEMP/second"
+          diff "$RUNNER_TEMP/first" "$RUNNER_TEMP/second"
+          test ! -e "$HOME/.codex"
+          test -z "$(find "$HOME/.dot-agent" "$HOME/.claude" -name __pycache__ -print -quit)"
+          python3 scripts/verify-profile.py --runtime claude
+
+  install:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [work, personal]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install into a fresh HOME as ${{ matrix.profile }}
+        run: |
+          export HOME="$RUNNER_TEMP/home-${{ matrix.profile }}"
+          mkdir -p "$HOME"
+          cp -R "$GITHUB_WORKSPACE" "$HOME/.dot-agent"
+          cd "$HOME/.dot-agent"
+          mkdir -p state
+          echo "${{ matrix.profile }}" > state/machine-profile
+          ./setup.sh
+          test ! -e "$HOME/.claude"
+          ./setup.sh --runtime all
+          test -f state/generated/docs/harness-runtime-reference.md
+          test -f "$HOME/.codex/docs/harness-runtime-reference.md"
+          cmp docs/harness-runtime-reference.md \
+            state/generated/docs/harness-runtime-reference.md
+          cmp docs/harness-runtime-reference.md \
+            "$HOME/.codex/docs/harness-runtime-reference.md"
+          test ! -e "$HOME/.codex/skills/parallel-plan/references"
+          test -f "$HOME/.codex/skills/grill-me/SKILL.md"
+          test -f "$HOME/.codex/skills/grill-me/agents/openai.yaml"
+          test -f "$HOME/.codex/skills/owner-mode/playbooks/feature.md"
+          test -f "$HOME/.claude/skills/owner-mode/principles/prove-it-works.md"
+          test -f "$HOME/.claude/skills/owner-mode/UPSTREAM.md"
+          test -f "$HOME/.claude/skills/owner-mode/LICENSE-MIT.md"
+          test ! -e "$HOME/.claude/skills/owner-mode/references"
+          test -f "$HOME/.claude/skills/deslop/references/hunter.md"
+          test "$(head -n 1 "$HOME/.claude/CLAUDE.md")" = "@$HOME/.dot-agent/state/generated/AGENTS.md"
+          test ! -L "$HOME/.claude/CLAUDE.md"
+          test -z "$(find "$HOME/.codex/skills" -type f \
+            \( -name '*.pyc' -o -name '*.pyo' \) -print -quit)"
+      - name: Strict instruction audits
+        run: |
+          export HOME="$RUNNER_TEMP/home-${{ matrix.profile }}"
+          cd "$HOME/.dot-agent"
+          python3 scripts/skill-instruction-audit.py --strict
+          python3 scripts/settings-drift-audit.py

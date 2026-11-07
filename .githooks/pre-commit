@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+branch="$(git symbolic-ref --short -q HEAD || true)"
+if [[ "$branch" == main || "$branch" == master ]]; then
+  echo "pre-commit: refusing to commit on $branch. Create a topic branch: git switch -c agent/<topic>" >&2
+  exit 1
+fi
+exec "$(git rev-parse --show-toplevel)/scripts/check"

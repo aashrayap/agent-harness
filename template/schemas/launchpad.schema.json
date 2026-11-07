@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Launchpad repo map",
+  "description": "Optional launchpad.json at a launchpad's root: the repositories it gathers. template/conform.py checks it only when the file exists.",
+  "type": "object",
+  "required": ["version", "name", "repositories"],
+  "properties": {
+    "version": {"const": 1},
+    "name": {"type": "string", "minLength": 1},
+    "project": {"type": "string", "minLength": 1},
+    "kind": {"enum": ["domain", "collection"]},
+    "description": {"type": "string", "minLength": 1},
+    "capabilities": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "entrypoints": {
+      "type": "object",
+      "additionalProperties": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+    },
+    "repositories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "remote", "role", "class"],
+        "properties": {
+          "name": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"},
+          "path": {"type": "string", "minLength": 1},
+          "remote": {"type": "string", "minLength": 1},
+          "role": {"type": "string", "minLength": 1},
+          "class": {"enum": ["writable", "upstream"]},
+          "host": {"type": "string", "minLength": 1},
+          "defaultBranch": {"type": "string", "minLength": 1},
+          "category": {"type": "string", "minLength": 1},
+          "displayName": {"type": "string", "minLength": 1},
+          "owner": {"type": "string"},
+          "checkEntrypoint": {"type": "string", "minLength": 1},
+          "instanceRequired": {"type": "boolean"},
+          "localLaunch": {"type": "boolean"}
+        }
+      }
+    }
+  }
+}

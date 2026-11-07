@@ -1,0 +1,1 @@
+../template/scripts/doc-fresh.py

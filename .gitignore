@@ -1,0 +1,15 @@
+/state/
+
+settings.local.json
+
+.DS_Store
+*.log
+*.tmp
+*.temp
+__pycache__/
+*.pyc
+*.swp
+*.swo
+*~
+.#*
+.claude/worktrees/

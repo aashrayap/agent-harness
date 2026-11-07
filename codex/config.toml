@@ -1,0 +1,9 @@
+model = "gpt-6.1-sol"
+model_reasoning_effort = "high"
+
+[features]
+multi_agent_v2 = { expose_spawn_agent_model_overrides = false }
+
+[agents]
+default_subagent_model = "gpt-6.1-sol"
+default_subagent_reasoning_effort = "medium"

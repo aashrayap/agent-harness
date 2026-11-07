@@ -1,0 +1,40 @@
+{
+  "PreToolUse": [
+    {
+      "matcher": "Bash|mcp__terminal__run_in_terminal|mcp__ccd_pr__set_auto_merge|mcp__.*merge_pull_request",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "f=\"$HOME/.dot-agent/claude/hooks/no-push-to-main.py\"; [ -f \"$f\" ] || exit 0; python3 \"$f\"",
+          "timeout": 10
+        },
+        {
+          "type": "command",
+          "command": "f=\"$HOME/.dot-agent/claude/hooks/merge-gate.py\"; [ -f \"$f\" ] || exit 0; python3 \"$f\"",
+          "timeout": 120
+        }
+      ]
+    },
+    {
+      "matcher": "mcp__(?!ccd_).*__(send|reply|forward|post_?message|create_event|update_event|respond_to_event|delete_event|share_file).*",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "f=\"$HOME/.dot-agent/claude/hooks/ask-before-send.py\"; [ -f \"$f\" ] || exit 0; python3 \"$f\"",
+          "timeout": 10
+        }
+      ]
+    }
+  ],
+  "Stop": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "f=\"$HOME/.dot-agent/claude/hooks/outcome-line.py\"; [ -f \"$f\" ] || exit 0; python3 \"$f\"",
+          "timeout": 10
+        }
+      ]
+    }
+  ]
+}

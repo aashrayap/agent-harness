@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+set -uo pipefail
+cd "$(dirname "$0")/.."
+py=${PYTHON:-python3}
+base=${BASE_REF:-origin/main}
+failed=0
+
+run() {
+  echo "== $*"
+  "$@" || failed=1
+}
+
+run "$py" scripts/validate-skill-manifests.py
+run "$py" scripts/skill-catalog.py --check
+run "$py" scripts/profile-lint.py
+run "$py" scripts/repo-instruction-audit.py --strict --dot-agent-only
+run "$py" template/conform.py .
+run "$py" scripts/check-constraints.py
+run "$py" scripts/one-home-check.py
+run "$py" scripts/forbidden-words.py
+run "$py" scripts/no-comments.py
+run "$py" scripts/diagram-lint.py --repo
+run "$py" scripts/readme-check.py
+run "$py" scripts/owner-mode-upstream.py --check
+run "$py" scripts/private-boundary.py
+run bash scripts/build-repo-skills.sh --check
+if [[ "$(git rev-parse --abbrev-ref HEAD)" == main ]]; then
+  run git diff --check HEAD
+else
+  run "$py" scripts/check-version-bump.py "$base"
+  run "$py" scripts/dropped-rules.py "$base"
+  run "$py" scripts/doc-fresh.py "$base"
+  run git diff --check "$(git merge-base "$base" HEAD)"
+fi
+
+if [[ "${1:-}" == --tests ]]; then
+  for suite in scripts/tests skills/learning/llm-wiki/tests; do
+    run "$py" -m unittest discover -s "$suite" -p 'test_*.py'
+  done
+  for mod in claude/mods/*/; do
+    if command -v claude >/dev/null 2>&1; then
+      run claude plugin test "$mod"
+    else
+      echo "== SKIP claude plugin test $mod: claude is not on PATH"
+    fi
+  done
+  command -v claude >/dev/null 2>&1 && run claude plugin validate . || echo "== SKIP claude plugin validate .: claude is not on PATH"
+fi
+
+if (( failed )); then
+  echo "check: FAIL"
+  exit 1
+fi
+echo "check: PASS"

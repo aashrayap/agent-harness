@@ -1,0 +1,6 @@
+interface:
+  display_name: "Prototype"
+  short_description: "Build throwaway evidence for one decision."
+  default_prompt: "Use $prototype to settle this design question with a throwaway artifact."
+policy:
+  allow_implicit_invocation: true

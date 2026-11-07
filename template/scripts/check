@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+set -uo pipefail
+cd "$(dirname "$0")/.."
+py=${PYTHON:-python3}
+failed=0
+
+run() {
+  echo "== $*"
+  "$@" || failed=1
+}
+
+skeleton() {
+  local missing=() relative
+  for relative in README.md AGENTS.md CLAUDE.md CONSTRAINTS.tsv GLOSSARY.md VERIFY.md \
+    VERSION RELEASES.md scripts/check scripts/private-boundary.py; do
+    [[ -f "$relative" ]] || missing+=("$relative")
+  done
+  if (( ${#missing[@]} )); then
+    echo "skeleton: missing ${missing[*]}"
+    return 1
+  fi
+  echo "skeleton: PASS"
+}
+
+lint() {
+  local bad=0 file
+  while IFS= read -r -d '' file; do
+    [[ -f "$file" ]] || continue
+    case "$file" in
+      *.py) "$py" -c 'import ast, sys; ast.parse(open(sys.argv[1]).read(), sys.argv[1])' "$file" || bad=1 ;;
+      *.sh | scripts/check) bash -n "$file" || bad=1 ;;
+      *.json) "$py" -m json.tool "$file" >/dev/null || { echo "lint: $file is not valid JSON"; bad=1; } ;;
+    esac
+  done < <(git ls-files -z)
+  (( bad )) && return 1
+  echo "lint: PASS"
+}
+
+run skeleton
+run lint
+run "$py" scripts/private-boundary.py
+run "$py" scripts/readme-check.py
+run "$py" scripts/doc-fresh.py "${BASE_REF:-origin/main}"
+if git rev-parse --verify -q HEAD >/dev/null; then
+  run git diff --check HEAD
+else
+  run git diff --check --cached
+fi
+
+if [[ "${1:-}" == --tests && -d tests ]]; then
+  run "$py" -m unittest discover -s tests -p 'test_*.py'
+fi
+
+if (( failed )); then
+  echo "check: FAIL"
+  exit 1
+fi
+echo "check: PASS"

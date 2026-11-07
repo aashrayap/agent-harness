@@ -1,0 +1,1 @@
+{ "name": "dot-agent", "description": "dot-agent harness skills for Claude Code cloud sessions: the committed .claude/skills copy", "skills": "./.claude/skills/" }
