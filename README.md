@@ -5,7 +5,8 @@ A harness that runs AI coding agents under machine-checked rules, with a merge g
 Every rule lives in [CONSTRAINTS.tsv](CONSTRAINTS.tsv) with the code that
 enforces it and the test that proves it. Agents merge low-risk work themselves;
 anything touching setup, hooks, CI, rules or credentials waits for the owner's
-recorded yes. Judgment rules are in [AGENTS.md](AGENTS.md).
+recorded yes. Judgment rules are in [AGENTS.md](AGENTS.md). Skills include
+`/owner-mode`, `/verify`, Arena, Unslop and `show-me`.
 
 ```mermaid
 flowchart LR
@@ -25,6 +26,6 @@ MIT licensed.
 
 | | |
 |---|---|
-| Version | 2.27.0 |
+| Version | 2.27.1 |
 | Works | Claude Code setup, merge gate, hooks, repo template |
 | Next | verdict check when a PR opens |
